@@ -1,0 +1,61 @@
+#!/bin/bash
+
+# `vercomp()` is copied from: http://stackoverflow.com/a/4025065
+function vercomp() {
+    if [[ $1 == $2 ]]
+    then
+        return 0
+    fi
+    local IFS=.
+    local i ver1=($1) ver2=($2)
+    # fill empty fields in ver1 with zeros
+    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
+    do
+        ver1[i]=0
+    done
+    for ((i=0; i<${#ver1[@]}; i++))
+    do
+        if [[ -z ${ver2[i]} ]]
+        then
+            # fill empty fields in ver2 with zeros
+            ver2[i]=0
+        fi
+        if ((10#${ver1[i]} > 10#${ver2[i]}))
+        then
+            return 1
+        fi
+        if ((10#${ver1[i]} < 10#${ver2[i]}))
+        then
+            return 2
+        fi
+    done
+    return 0
+}
+
+os=$(uname)
+
+if [[ "$os" != "Darwin" ]]; then
+    echo "Currently this script only functions on OSX"
+    exit 0
+fi
+
+sysver=$(sw_vers -productVersion)
+
+# https://support.apple.com/en-sg/HT202516
+vercomp $sysver 10.10.3
+ret=$?
+if [[ $ret -eq 1 ]]; then
+    echo sudo killall -HUP mDNSResponder
+    sudo killall -HUP mDNSResponder
+elif [[ $ret -eq 0 ]]; then
+    echo sudo discoveryutil mdnsflushcache
+    sudo discoveryutil mdnsflushcache
+elif [[ $sysver == 10.9.* ]]; then
+    echo sudo killall -HUP mDNSResponder
+    sudo killall -HUP mDNSResponder
+elif [[ $sysver == 10.6.* ]]; then
+    echo sudo dscacheutil -flushcache
+    sudo dscacheutil -flushcache
+else
+    echo "Unspoorted OSX Version: $sysver"
+fi
