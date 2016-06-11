@@ -1,0 +1,9 @@
+alias gbkserver set ftp:charset gbk;set file:charset utf-8
+alias utfserver set ftp:charset utf-8;set file:charset utf-8
+alias ls cls -lhSF
+
+set color:use-color true
+set file:charset utf-8
+
+#set ftp:passive-mode/a.b.c.d no
+#set ftp:charset/a.b.c.d gbk

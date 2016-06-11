@@ -1,0 +1,13 @@
+# By default some status messages about the download are printed. You can
+# disable this by setting this one to zero.
+verbose = 1
+
+# If you don't like the wget-alike interface, you can set this to 1 to get
+# a scp-alike interface.
+alternate_output = 1
+
+# You can set the maximum number of connections Axel will try to set up
+# here. There's a value precompiled in the program too, setting this too
+# high requires recompilation. PLEASE respect FTP server operators and other
+# users: Don't set this one too high!!! 4 is enough in most cases.
+num_connections = 5

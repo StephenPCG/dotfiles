@@ -73,3 +73,21 @@ function rebuild_gopath() {
     rm -rf $GOPATH/*
     set +x
 }
+
+# Syntax-highlight JSON strings or files
+# Usage: `json <filename>` or `echo '{"foo":42}' | json`
+function json() {
+    if [ -t 0 ]; then # argument
+        python -mjson.tool < "$1" | pygmentize -l javascript;
+    else # pipe
+        python -mjson.tool | pygmentize -l javascript;
+    fi;
+}
+
+# `tre` is a shorthand for `tree` with hidden files and color enabled, ignoring
+# the `.git` directory, listing directories first. The output gets piped into
+# `less` with options to preserve color and line numbers, unless the output is
+# small enough for one screen.
+function tre() {
+    tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX;
+}

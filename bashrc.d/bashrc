@@ -55,6 +55,7 @@ source_if_exist $(brew --prefix)/share/bash-completion/bash_completion
 
 # aliases
 source_if_exist $_SOURCE_DIR/aliases
+source_if_exist $_SOURCE_DIR/exports
 
 # PS1
 PROMPT_COMMAND_FILE=$_SOURCE_DIR/ps1.sh
