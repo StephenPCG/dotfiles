@@ -1,0 +1,70 @@
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
+
+# find the dir of .bashrc file (resolv symlink)
+# we could use ``_SOURCE=$(dirname $(readlink -f ${BASH_SOURCE[0]}))``, however, OSX's version of
+# ``readlink`` does not support '-f' option.
+_SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$_SOURCE" ]; do
+    _TARGET=$(readlink "$_SOURCE")
+    if [[ "$_TARGET" == /* ]]; then
+        _SOURCE="$_TARGET"
+    else
+        _SOURCE=$(dirname "$_SOURCE")/$_TARGET
+    fi
+done
+_SOURCE_DIR=$(dirname "$_SOURCE")
+unset _SOURCE _TARGET
+
+source $_SOURCE_DIR/functions.sh
+_OS=$(detect_os)
+
+# bash settings
+shopt -s histappend
+export HISTSIZE=1000000
+export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S"
+
+# populate PATH
+export PATH=/usr/local/bin:/usr/local/sbin/:/usr/bin:/bin:/usr/sbin:/sbin
+append_to_path $(dirname $_SOURCE_DIR)/bin
+case $_OS in
+    Darwin)
+        ## add coreutils bin path
+        prepend_to_path /usr/local/opt/coreutils/libexec/gnubin
+        ## add gnu-sed bin path
+        prepend_to_path /usr/local/opt/gnu-sed/libexec/gnubin
+        ;;
+    *) :;;
+esac
+
+# golang settings
+case $_OS in
+    Darwin)
+        export GOPATH=$HOME/Library/Caches/go
+        ;;
+    Linux)
+        export GOPATH=$HOME/.cache/go
+        ;;
+    *) :;;
+esac
+append_to_path $GOPATH/bin
+
+# bash completions
+source_if_exist /etc/bash_completion
+source_if_exist $(brew --prefix)/share/bash-completion/bash_completion
+
+# aliases
+source_if_exist $_SOURCE_DIR/aliases
+
+# PS1
+PROMPT_COMMAND_FILE=$_SOURCE_DIR/ps1.sh
+_update_ps1() {
+    PS1=$($PROMPT_COMMAND_FILE $?)
+}
+if [ -x "$PROMPT_COMMAND_FILE" ]; then
+    PROMPT_COMMAND="_update_ps1"
+fi
+
+# unset variables
+unset _SOURCE_DIR
+unset _OS
