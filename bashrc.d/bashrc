@@ -37,6 +37,8 @@ prepend_to_path_if_exist /usr/local/opt/gnu-sed/libexec/gnubin
 # golang settings
 export GOPATH=$_CACHE_DIR/go
 append_to_path $GOPATH/bin
+# go installs to /usr/local/go on linux
+append_to_path_if_exist /usr/local/go/bin
 
 # virtualenv wrapper
 export WORKON_HOME=$_CACHE_DIR/envs
