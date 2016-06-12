@@ -18,6 +18,7 @@ unset _SOURCE _TARGET
 
 source $_SOURCE_DIR/functions.sh
 _OS=$(detect_os)
+_CACHE_DIR=$(get_cache_dir)
 
 # bash settings
 shopt -s histappend
@@ -26,28 +27,20 @@ export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S"
 
 # populate PATH
 export PATH=/usr/local/bin:/usr/local/sbin/:/usr/bin:/bin:/usr/sbin:/sbin
+# bin files shipped with this repo
 append_to_path $(dirname $_SOURCE_DIR)/bin
-case $_OS in
-    Darwin)
-        ## add coreutils bin path
-        prepend_to_path /usr/local/opt/coreutils/libexec/gnubin
-        ## add gnu-sed bin path
-        prepend_to_path /usr/local/opt/gnu-sed/libexec/gnubin
-        ;;
-    *) :;;
-esac
+# homebrew: coreutils bin path
+prepend_to_path_if_exist /usr/local/opt/coreutils/libexec/gnubin
+# homebrew: gnu-sed bin path
+prepend_to_path_if_exist /usr/local/opt/gnu-sed/libexec/gnubin
 
 # golang settings
-case $_OS in
-    Darwin)
-        export GOPATH=$HOME/Library/Caches/go
-        ;;
-    Linux)
-        export GOPATH=$HOME/.cache/go
-        ;;
-    *) :;;
-esac
+export GOPATH=$_CACHE_DIR/go
 append_to_path $GOPATH/bin
+
+# virtualenv wrapper
+export WORKON_HOME=$_CACHE_DIR/envs
+command -v virtualenvwrapper.sh > /dev/null && source_if_exist `command -v virtualenvwrapper.sh`
 
 # bash completions
 source_if_exist /etc/bash_completion
@@ -55,6 +48,7 @@ command -v brew > /dev/null && source_if_exist $(brew --prefix)/share/bash-compl
 
 # aliases
 source_if_exist $_SOURCE_DIR/aliases
+# env variables to export
 source_if_exist $_SOURCE_DIR/exports
 
 # PS1
@@ -72,3 +66,4 @@ fi
 # unset variables
 unset _SOURCE_DIR
 unset _OS
+unset _CACHE_DIR

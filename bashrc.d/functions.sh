@@ -12,6 +12,21 @@ function detect_os() {
     esac
 }
 
+function get_cache_dir() {
+    local os=$(detect_os)
+    case $os in
+        Darwin)
+            echo $HOME/Library/Caches
+            ;;
+        Linux)
+            echo $HOME/.cache
+            ;;
+        *)
+            echo $HOME/.cache
+            ;;
+    esac
+}
+
 function source_if_exist() {
     if [ -r "$1" ]; then
         . $1
@@ -38,8 +53,16 @@ function append_to_path() {
     _add_to_path "$1" append
 }
 
+function append_to_path_if_exist() {
+    test -e "$1" && _add_to_path "$1" append
+}
+
 function prepend_to_path() {
     _add_to_path "$1" prepand
+}
+
+function prepend_to_path_if_exist() {
+    test -e "$1" && _add_to_path "$1" prepand
 }
 
 function rebuild_gopath() {
