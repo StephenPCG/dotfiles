@@ -51,7 +51,7 @@ append_to_path $GOPATH/bin
 
 # bash completions
 source_if_exist /etc/bash_completion
-source_if_exist $(brew --prefix)/share/bash-completion/bash_completion
+command -v brew > /dev/null && source_if_exist $(brew --prefix)/share/bash-completion/bash_completion
 
 # aliases
 source_if_exist $_SOURCE_DIR/aliases
