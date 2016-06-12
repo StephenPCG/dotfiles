@@ -2,7 +2,7 @@ bashrc.d/bashrc .bashrc
 curlrc .curlrc
 wgetrc .wgetrc
 axelrc .axelrc
-gitconfig .gitconfig
+gitconfig .gitconfig copy
 gitignore .gitignore
 gitattributes .gitattributes
 user-dirs.conf .config/user-dirs.conf linuxonly
