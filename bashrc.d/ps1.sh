@@ -21,20 +21,20 @@ prompt_command() {
     local CLR_COLOR=$'\E[0m'
 
     ## parse term title
-    #case "$TERM" in
-    #    screen)
-    #        [[ -n "$_TERM_TITLE" ]] \
-    #            && __TERM_TITLE=$'\033k'"$TERM_TITLE"$'\033\\ ' \
-    #            || __TERM_TITLE=$'\033k'"${HOSTNAME}"$'\033\\ '
-    #        ;;
-    #    xterm*)
-    #        [[ -n "$_TERM_TITLE" ]] \
-    #            && __TERM_TITLE=$'\E]0;'"$TERM_TITLE: ${PWD/$HOME/~}"$'\007' \
-    #            || __TERM_TITLE=$'\E]0;'"${USER}@${HOSTNAME}: ${PWD/$HOME/~}"$'\007'
-    #        ;;
-    #    *)
-    #        __TERM_TITLE=""
-    #esac
+    case "$TERM" in
+        screen)
+            [[ -n "$_TERM_TITLE" ]] \
+                && __TERM_TITLE=$'\033k'"$TERM_TITLE"$'\033\\ ' \
+                || __TERM_TITLE=$'\033k'"${HOSTNAME}"$'\033\\ '
+            ;;
+        xterm*)
+            [[ -n "$_TERM_TITLE" ]] \
+                && __TERM_TITLE=$'\E]0;'"$TERM_TITLE: ${PWD/$HOME/~}"$'\007' \
+                || __TERM_TITLE=$'\E]0;'"${USER}@${HOSTNAME}: ${PWD/$HOME/~}"$'\007'
+            ;;
+        *)
+            __TERM_TITLE=""
+    esac
 
     # parse git branch
     IS_GIT_BRANCH=$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/-(git:\1${GIT_IS_DIRTY})/")
@@ -56,7 +56,8 @@ prompt_command() {
         && IS_SHLVL="-(SHLVL:$SHLVL)" \
         || IS_SHLVL=""
 
-    _PS="\[${PS1_COLOR}\]"
+    _PS="${__TERM_TITLE}\n"
+    _PS+="\[${PS1_COLOR}\]"
     _PS+="(\u)-(\h)-(\w)"
     _PS+="${IS_GIT_BRANCH}"
     _PS+="${IS_SHLVL}"
@@ -68,7 +69,7 @@ prompt_command() {
     _PS+="\[${CLR_COLOR}\]"
     _PS+=" "
 
-    echo "\n$_PS"
+    echo "$_PS"
     #echo "${__TERM_TITLE}\n\
 #\[${PS1_COLOR}\](\u)-(\h)${_IS_SCREEN}-(\w)${IS_GIT_BRANCH}${IS_SHLVL}${IS_RETURN_VAL}\[${CLR_COLOR}\]\n\
 #\[${PS1_COLOR}\](! \!)->\[${CLR_COLOR}\] "
