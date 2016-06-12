@@ -58,6 +58,9 @@ source_if_exist $_SOURCE_DIR/aliases
 source_if_exist $_SOURCE_DIR/exports
 
 # PS1
+[[ -n "$SSH_TTY" ]] && export _IS_REMOTE="-(ssh)"
+[[ -n "$REMOTEHOST" ]] && export _IS_REMOTE="${IS_REMOTE}-(rsh)"
+[[ -n "$STY" ]] && export _IS_SCREEN="-(screen)"
 PROMPT_COMMAND_FILE=$_SOURCE_DIR/ps1.sh
 _update_ps1() {
     PS1=$($PROMPT_COMMAND_FILE $?)
