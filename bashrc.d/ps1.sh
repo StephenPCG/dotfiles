@@ -62,7 +62,7 @@ prompt_command() {
     _PS+="\[${PS1_COLOR}\]"
     _PS+="(\u)-(\h)-(\w)"
     _PS+="${IS_GIT_BRANCH}"
-    _PS+="${IS_ENV}"
+    _PS+="${IS_VENV}"
     _PS+="${IS_GOENV}"
     _PS+="${IS_SHLVL}"
     _PS+="${IS_RETURN_VAL}"
