@@ -38,6 +38,8 @@ prompt_command() {
 
     # parse git branch
     IS_GIT_BRANCH=$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/-(git:\1${GIT_IS_DIRTY})/")
+    [[ -n "$VIRTUAL_ENV" ]] && IS_VENV="-(pyenv:${VIRTUAL_ENV##*/})"
+    [[ -n "$GOENV" ]] && IS_GOENV="-(goenv:${GOENV})"
 
     ## parse command line color
     if [[ -z "$_IS_REMOTE" ]]; then
@@ -60,6 +62,8 @@ prompt_command() {
     _PS+="\[${PS1_COLOR}\]"
     _PS+="(\u)-(\h)-(\w)"
     _PS+="${IS_GIT_BRANCH}"
+    _PS+="${IS_ENV}"
+    _PS+="${IS_GOENV}"
     _PS+="${IS_SHLVL}"
     _PS+="${IS_RETURN_VAL}"
     _PS+="\[${CLR_COLOR}\]"
