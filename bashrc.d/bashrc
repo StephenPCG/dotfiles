@@ -23,7 +23,7 @@ _CACHE_DIR=$(get_cache_dir)
 # bash settings
 shopt -s histappend
 export HISTSIZE=1000000
-export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S"
+export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S "
 
 # populate PATH
 export PATH=/usr/local/bin:/usr/local/sbin/:/usr/bin:/bin:/usr/sbin:/sbin

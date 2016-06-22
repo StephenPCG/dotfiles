@@ -71,7 +71,7 @@ function rebuild_gopath() {
         return 1
     fi
 
-    if [ -d "$GOPATH" ]; then
+    if [ ! -d "$GOPATH" ]; then
         echo "\$GOPATH ($GOPATH) does not exist, abort."
         return 1
     fi
