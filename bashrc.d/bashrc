@@ -26,7 +26,7 @@ export HISTSIZE=1000000
 export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S "
 
 # populate PATH
-export PATH=/usr/local/bin:/usr/local/sbin/:/usr/bin:/bin:/usr/sbin:/sbin
+export PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin
 # bin files shipped with this repo
 append_to_path $(dirname $_SOURCE_DIR)/bin
 # homebrew: coreutils bin path
