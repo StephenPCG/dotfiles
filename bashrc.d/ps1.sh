@@ -55,8 +55,10 @@ prompt_command() {
         || IS_RETURN_VAL=""
 
     ## parse shell level
-    [[ "$SHLVL" -gt 2 ]] \
-        && IS_SHLVL="-(SHLVL:$SHLVL)" \
+    # NOTE ps1.sh is evaluated in a subshell, thus SHLVL is 1 greater than actual
+    local _SHLVL=$((SHLVL-1))
+    [[ "$_SHLVL" -gt 1 ]] \
+        && IS_SHLVL="-(SHLVL:$_SHLVL)" \
         || IS_SHLVL=""
 
     _PS="${__TERM_TITLE}\n"
