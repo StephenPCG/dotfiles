@@ -33,6 +33,8 @@ append_to_path $(dirname $_SOURCE_DIR)/bin
 prepend_to_path_if_exist /usr/local/opt/coreutils/libexec/gnubin
 # homebrew: gnu-sed bin path
 prepend_to_path_if_exist /usr/local/opt/gnu-sed/libexec/gnubin
+append_to_path $HOME/bin
+append_to_path $HOME/.local/bin
 
 # golang settings
 export GOPATH=$_CACHE_DIR/go
