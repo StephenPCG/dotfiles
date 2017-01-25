@@ -1,0 +1,123 @@
+#!/bin/bash
+
+__goenv_root=$HOME/.goenv
+
+__goenv_old_gopath=
+export GOENV=
+
+__goenv_help() {
+    echo "Usage:"
+    echo "    goenv create <envname>"
+    echo "    goenv active <envname>"
+    echo "    goenv deactivate"
+    echo "    goenv link <source-path> <import-path>"
+}
+
+__goenv_create() {
+    local name="$1"
+
+    if [[ -z "$name" ]]; then
+        __goenv_help
+        return 1
+    fi
+
+    if [[ -e "$__goenv_root/$name" ]]; then
+        echo "the specified env already exist, abort."
+        return 1
+    fi
+
+    mkdir -p "$__goenv_root/$name"
+
+    __goenv_activate "$name"
+}
+
+__goenv_activate() {
+    local name="$1"
+
+    if [[ -z "$name" ]]; then
+        __goenv_help
+        return 1
+    fi
+
+    if [[ ! -e "$__goenv_root/$name" ]]; then
+        echo "specified env ($name) does not exist, abort."
+        return 1
+    fi
+
+    if [[ -n "$GOENV" ]]; then
+        __goenv_deactivate "$GOENV"
+    fi
+
+    __goenv_old_gopath="$GOPATH"
+
+    export GOPATH="$__goenv_root/$name"
+    export GOENV=$name
+    append_to_path "$GOPATH/bin"
+}
+
+__goenv_deactivate() {
+    if [[ -n "$GOPATH" ]]; then
+        remove_path "$GOPATH/bin"
+    fi
+    export GOPATH="$__goenv_old_gopath"
+    export GOENV=
+
+    __goenv_old_gopath=
+}
+
+__goenv_abs_path() {
+    (cd "$1" && pwd)
+}
+
+__goenv_link() {
+    local source_path="$1"
+    local import_path="$2"
+
+    if [[ -z "$source_path" || -z "$import_path" ]]; then
+        __goenv_help
+        return 1
+    fi
+
+    # expand source path to absolute path
+    if [[ ! -d "$source_path" ]]; then
+        echo "source path '$source_path' does not exist or is not a directory"
+        return 1
+    fi
+
+    if [[ -z "$GOPATH" ]]; then
+        echo "GOPATH is empty"
+        return 1
+    fi
+
+    if [[ -z "$GOENV" ]]; then
+        echo "WARNING: no GOENV is activated, link created to system wide GOPATH"
+    fi
+
+    source_path=$(__goenv_abs_path "$source_path")
+    local link_file="$GOPATH/src/$import_path"
+
+    mkdir -pv $(dirname $link_file)
+    ln -svnf $source_path $link_file
+}
+
+goenv() {
+    local cmd="$1"
+    shift
+    case "$cmd" in
+        create)
+            __goenv_create "$@"
+            ;;
+        activate)
+            __goenv_activate "$@"
+            ;;
+        deactivate)
+            __goenv_deactivate "$@"
+            ;;
+        link)
+            __goenv_link "$@"
+            ;;
+        *)
+            __goenv_help "$@"
+            ;;
+    esac
+}

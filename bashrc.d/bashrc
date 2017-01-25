@@ -55,6 +55,9 @@ source_if_exist $_SOURCE_DIR/aliases
 # env variables to export
 source_if_exist $_SOURCE_DIR/exports
 
+# goenv
+source_if_exist $_SOURCE_DIR/goenv
+
 # PS1
 [[ -n "$SSH_TTY" ]] && export _IS_REMOTE="-(ssh)"
 [[ -n "$REMOTEHOST" ]] && export _IS_REMOTE="${IS_REMOTE}-(rsh)"

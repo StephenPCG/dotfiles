@@ -65,6 +65,13 @@ function prepend_to_path_if_exist() {
     test -e "$1" && _add_to_path "$1" prepand
 }
 
+function remove_path() {
+    PATH=${PATH//":$1:"/":"}
+    PATH=${PATH/#"$1:"/}
+    PATH=${PATH/%":$1"/}
+    export PATH
+}
+
 function rebuild_gopath() {
     if [ -z "$GOPATH" ]; then
         echo "\$GOPATH is not set, abort."
