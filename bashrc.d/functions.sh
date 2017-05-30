@@ -153,3 +153,12 @@ vercomp () {
     done
     return 0
 }
+
+# output golang coverage html
+gocover() {
+    local pkg=$1
+    local pkg_short=${pkg##*/}
+    go test -v -coverprofile=/tmp/cover.$$ $pkg
+    go tool cover -html=/tmp/cover.$$ -o /tmp/cover.$pkg_short.html
+    echo "Coverage HTML output: /tmp/cover.$pkg_short.html"
+}
