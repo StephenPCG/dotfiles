@@ -1,4 +1,4 @@
-function detect_os() {
+detect_os() {
     case $(uname) in
         Linux)
             echo "Linux"
@@ -12,7 +12,7 @@ function detect_os() {
     esac
 }
 
-function get_cache_dir() {
+get_cache_dir() {
     local os=$(detect_os)
     case $os in
         Darwin)
@@ -27,13 +27,13 @@ function get_cache_dir() {
     esac
 }
 
-function source_if_exist() {
+source_if_exist() {
     if [ -r "$1" ]; then
         . $1
     fi
 }
 
-function _add_to_path() {
+_add_to_path() {
     newpath=$(echo $1 | sed 's:/*$::')
     direction=${2:-append}
     case ":$PATH:" in
@@ -49,30 +49,30 @@ function _add_to_path() {
     export PATH
 }
 
-function append_to_path() {
+append_to_path() {
     _add_to_path "$1" append
 }
 
-function append_to_path_if_exist() {
+append_to_path_if_exist() {
     test -e "$1" && _add_to_path "$1" append
 }
 
-function prepend_to_path() {
+prepend_to_path() {
     _add_to_path "$1" prepand
 }
 
-function prepend_to_path_if_exist() {
+prepend_to_path_if_exist() {
     test -e "$1" && _add_to_path "$1" prepand
 }
 
-function remove_path() {
+remove_path() {
     PATH=${PATH//":$1:"/":"}
     PATH=${PATH/#"$1:"/}
     PATH=${PATH/%":$1"/}
     export PATH
 }
 
-function rebuild_gopath() {
+rebuild_gopath() {
     if [ -z "$GOPATH" ]; then
         echo "\$GOPATH is not set, abort."
         return 1
@@ -106,7 +106,7 @@ function rebuild_gopath() {
 
 # Syntax-highlight JSON strings or files
 # Usage: `json <filename>` or `echo '{"foo":42}' | json`
-function json() {
+json() {
     if [ -t 0 ]; then # argument
         python -mjson.tool < "$1" | pygmentize -l javascript;
     else # pipe
@@ -118,7 +118,7 @@ function json() {
 # the `.git` directory, listing directories first. The output gets piped into
 # `less` with options to preserve color and line numbers, unless the output is
 # small enough for one screen.
-function tre() {
+tre() {
     tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX;
 }
 
@@ -161,4 +161,8 @@ gocover() {
     go test -v -coverprofile=/tmp/cover.$$ $pkg
     go tool cover -html=/tmp/cover.$$ -o /tmp/cover.$pkg_short.html
     echo "Coverage HTML output: /tmp/cover.$pkg_short.html"
+}
+
+ipip() {
+    curl http://freeapi.ipip.net/$1
 }
