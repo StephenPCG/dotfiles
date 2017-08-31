@@ -1,0 +1,5 @@
+# global tools used
+httpstat
+httpie
+you-get
+powerline-status
