@@ -43,8 +43,15 @@ append_to_path $GOPATH/bin
 append_to_path_if_exist /usr/local/go/bin
 
 # virtualenv wrapper
-export WORKON_HOME=$_CACHE_DIR/envs
-command -v virtualenvwrapper.sh > /dev/null && source_if_exist `command -v virtualenvwrapper.sh`
+if command -v virtualenvwrapper.sh >/dev/null; then
+    if command -v python3 >/dev/null; then
+        export VIRTUALENVWRAPPER_PYTHON=`command -v python3`
+    elif command -v python2 >/dev/null; then
+        export VIRTUALENVWRAPPER_PYTHON=`command -v python2`
+    fi
+    export WORKON_HOME=$_CACHE_DIR/envs
+    source_if_exist `command -v virtualenvwrapper.sh`
+fi
 
 # bash completions
 source_if_exist /etc/bash_completion
