@@ -41,7 +41,9 @@ prompt_command() {
     [[ -n "$VIRTUAL_ENV" ]] && IS_VENV="-(pyenv:${VIRTUAL_ENV##*/})"
     [[ -n "$GOENV" ]] && IS_GOENV="-(goenv:${GOENV})"
     [[ -n "$NODE_VIRTUAL_ENV" ]] && IS_NODEENV="-(node:${NODE_VIRTUAL_ENV##*/})"
-    [[ -n "$DOCKER_HOST" ]] && IS_DOCKER="-(docker:${DOCKER_HOST})"
+    local DOCKER_NAME=${DOCKER_HOST##tcp://}
+    DOCKER_NAME=${DOCKER_NAME%%.*}
+    [[ -n "$DOCKER_NAME" ]] && IS_DOCKER="-(docker:${DOCKER_NAME})"
 
     ## parse command line color
     if [[ -z "$_IS_REMOTE" ]]; then
