@@ -18,7 +18,6 @@ unset _SOURCE _TARGET
 
 source $_SOURCE_DIR/functions.sh
 _OS=$(detect_os)
-_CACHE_DIR=$(get_cache_dir)
 
 # bash settings
 shopt -s histappend
@@ -37,21 +36,10 @@ append_to_path $HOME/bin
 append_to_path $HOME/.local/bin
 
 # golang settings
-export GOPATH=$_CACHE_DIR/go
+export GOPATH=$HOME/.go
 append_to_path $GOPATH/bin
 # go installs to /usr/local/go on linux
 append_to_path_if_exist /usr/local/go/bin
-
-# virtualenv wrapper
-if command -v virtualenvwrapper.sh >/dev/null; then
-    if command -v python3 >/dev/null; then
-        export VIRTUALENVWRAPPER_PYTHON=`command -v python3`
-    elif command -v python2 >/dev/null; then
-        export VIRTUALENVWRAPPER_PYTHON=`command -v python2`
-    fi
-    export WORKON_HOME=$_CACHE_DIR/envs
-    source_if_exist `command -v virtualenvwrapper.sh`
-fi
 
 # bash completions
 source_if_exist /etc/bash_completion
@@ -64,6 +52,14 @@ source_if_exist $_SOURCE_DIR/exports
 
 # goenv
 source_if_exist $_SOURCE_DIR/goenv
+
+# pyenv
+if command -v pyenv >/dev/null; then
+    eval "$(pyenv init -)"
+    export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
+    export WORKON_HOME=$HOME/.venvs
+    pyenv virtualenvwrapper_lazy
+fi
 
 # PS1
 [[ -n "$SSH_TTY" ]] && export _IS_REMOTE="-(ssh)"
@@ -80,4 +76,3 @@ fi
 # unset variables
 unset _SOURCE_DIR
 unset _OS
-unset _CACHE_DIR
