@@ -52,6 +52,15 @@ prompt_command() {
         [[ "$RETVAL" -eq 0 ]] && PS1_COLOR="${RED}" || PS1_COLOR="${BG_RED}"
     fi
 
+    #if which kubectl >/dev/null; then
+    #    local _kube_context=$(kubectl config current-context 2>/dev/null)
+    #    local _kube_ns=$(kubectl config view --minify --output 'jsonpath={..namespace}' 2>/dev/null)
+    #    _kube_ns=${_kube_ns:-default}
+    #    IS_KUBE="-(⎈ |${_kube_context}:${_kube_ns})"
+    #else
+    #    IS_KUBE=""
+    #fi
+
     ## parse return value
     [[ "$RETVAL" -ne 0 ]] \
         && IS_RETURN_VAL="-(\\\$?:$RETVAL)" \
@@ -72,6 +81,7 @@ prompt_command() {
     _PS+="${IS_NODEENV}"
     _PS+="${IS_GOENV}"
     _PS+="${IS_DOCKER}"
+    #_PS+="${IS_KUBE}"
     _PS+="${IS_SHLVL}"
     _PS+="${IS_RETURN_VAL}"
     _PS+="\[${CLR_COLOR}\]"

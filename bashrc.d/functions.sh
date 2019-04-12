@@ -164,6 +164,6 @@ gocover() {
 }
 
 ipip() {
-    curl http://freeapi.ipip.net/$1
+    curl -s http://freeapi.ipip.net/$1
     echo
 }
