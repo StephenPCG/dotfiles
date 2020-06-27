@@ -42,3 +42,15 @@
 
 [url "git@github.com:"]
 	insteadOf = https://github.com/
+[user]
+	name = Zhang Cheng
+	email = chengzhang@natureself.cn
+[url "git@git.ns-inc.cn:"]
+	insteadOf = https://git.ns-inc.cn/
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+[pull]
+	ff = only

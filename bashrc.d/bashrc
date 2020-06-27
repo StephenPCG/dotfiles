@@ -42,8 +42,11 @@ append_to_path $GOPATH/bin
 append_to_path_if_exist /usr/local/go/bin
 
 # bash completions
+# bash-completion@2 requires this
+export BASH_COMPLETION_COMPAT_DIR="/usr/local/etc/bash_completion.d"
 source_if_exist /etc/bash_completion
 command -v brew > /dev/null && source_if_exist $(brew --prefix)/share/bash-completion/bash_completion
+command -v brew > /dev/null && source_if_exist $(brew --prefix)/etc/profile.d/bash_completion.sh
 
 # aliases
 source_if_exist $_SOURCE_DIR/aliases
@@ -54,23 +57,23 @@ source_if_exist $_SOURCE_DIR/exports
 source_if_exist $_SOURCE_DIR/goenv
 
 # pyenv
-#if command -v pyenv >/dev/null; then
-#    eval "$(pyenv init -)"
-#    export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
-#    export WORKON_HOME=$HOME/.venvs
-#    pyenv virtualenvwrapper_lazy
-#fi
+if command -v pyenv >/dev/null; then
+    export WORKON_HOME=$HOME/.venvs
+    #export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
+    eval "$(pyenv init -)"
+    pyenv virtualenvwrapper_lazy
+fi
 
 # virtualenv wrapper
-if command -v virtualenvwrapper.sh >/dev/null; then
-    if command -v python3 >/dev/null; then
-        export VIRTUALENVWRAPPER_PYTHON=`command -v python3`
-    elif command -v python2 >/dev/null; then
-        export VIRTUALENVWRAPPER_PYTHON=`command -v python2`
-    fi
-    export WORKON_HOME=$HOME/.venvs
-    source_if_exist `command -v virtualenvwrapper.sh`
-fi
+#if command -v virtualenvwrapper.sh >/dev/null; then
+#    if command -v python3 >/dev/null; then
+#        export VIRTUALENVWRAPPER_PYTHON=`command -v python3`
+#    elif command -v python2 >/dev/null; then
+#        export VIRTUALENVWRAPPER_PYTHON=`command -v python2`
+#    fi
+#    export WORKON_HOME=$HOME/.venvs
+#    source_if_exist `command -v virtualenvwrapper.sh`
+#fi
 
 # PS1
 [[ -n "$SSH_TTY" ]] && export _IS_REMOTE="-(ssh)"
@@ -87,3 +90,9 @@ fi
 # unset variables
 unset _SOURCE_DIR
 unset _OS
+
+export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"
+export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
+
+#source_if_exist ~/.docker/init2/hosts/work.home.init2.me/activate
+source_if_exist ~/.docker/init2/hosts/zc.szo.natureself.site/activate
