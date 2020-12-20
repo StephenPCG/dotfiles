@@ -75,6 +75,12 @@ fi
 #    source_if_exist `command -v virtualenvwrapper.sh`
 #fi
 
+if [ "$TERM_PROGRAM" == 'vscode' ]; then
+    export GIT_EDITOR="code -w"
+else
+    export GIT_EDITOR="vim"
+fi
+
 # PS1
 [[ -n "$SSH_TTY" ]] && export _IS_REMOTE="-(ssh)"
 [[ -n "$REMOTEHOST" ]] && export _IS_REMOTE="${IS_REMOTE}-(rsh)"
